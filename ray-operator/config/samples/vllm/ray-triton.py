@@ -38,3 +38,5 @@ class TritonDeployment:
             responses.append(response)
 
         return responses
+
+triton = TritonDeployment.bind()
