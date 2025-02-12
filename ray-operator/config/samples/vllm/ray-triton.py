@@ -31,13 +31,13 @@ class TritonDeployment:
             
     @app.get("/infer")        
     def infer(server_url="http://localhost:8001", model_name="llama3-8b-instruct", prompt="what is tritonserver", max_tokens=1000, temperature=0.7):
-        try:
-            client = grpcclient.InferenceServerClient(url=server_url)
-        except Exception as e:
-            print(f"Failed to connect to Triton server: {e}")
-            return None
+        #try:
+        #    client = grpcclient.InferenceServerClient(url=server_url)
+        #except Exception as e:
+        #    print(f"Failed to connect to Triton server: {e}")
+        #    return None
 
-        print("Tritonserver connection is successful")
+        #print("Tritonserver connection is successful")
         # Define input and output tensors
         input_data = np.array([prompt], dtype=np.object_)
         input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
@@ -57,7 +57,7 @@ class TritonDeployment:
     
         try:
             print("Inferencing")
-            response = client.infer(
+            response = self._llama3_8b.infer(
                 model_name=model_name,
                 inputs=inputs,
                 outputs=outputs,
