@@ -24,7 +24,7 @@ class TritonDeployment:
         self._triton_server.start(wait_until_ready=True)
 
     @app.get("/generate")
-    def generate(self, prompt: str, filename: str = "generated_image.jpg") -> None:
+    def generate(self, prompt: str) -> None:
         if not self._triton_server.model("llama3-8b-instruct").ready():
             try:
                 self._llama3_8b = self._triton_server.load("llama3-8b-instruct")
