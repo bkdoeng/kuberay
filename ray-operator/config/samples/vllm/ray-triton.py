@@ -28,14 +28,16 @@ class TritonDeployment:
         self._llama3_8b = self._triton_server.load("llama3-8b-instruct")
         if not self._llama3_8b.ready():
                     raise Exception("Model not ready")
+            
     @app.get("/infer")        
-    def infer(server_url="http://localhost:8001", model_name="llama3-8b-instruct", prompt="what is tritonserver", max_tokens=20, temperature=0.7):
+    def infer(server_url="http://localhost:8001", model_name="llama3-8b-instruct", prompt="what is tritonserver", max_tokens=1000, temperature=0.7):
         try:
             client = grpcclient.InferenceServerClient(url=server_url)
         except Exception as e:
             print(f"Failed to connect to Triton server: {e}")
             return None
-    
+
+        print("Tritonserver connection is successful")
         # Define input and output tensors
         input_data = np.array([prompt], dtype=np.object_)
         input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
@@ -54,15 +56,18 @@ class TritonDeployment:
         outputs = [grpcclient.InferRequestedOutput("text_output")]
     
         try:
+            print("Inferencing")
             response = client.infer(
                 model_name=model_name,
                 inputs=inputs,
                 outputs=outputs,
                 parameters=parameters
             )
-    
+            print("Inference done")
+            
             # Extract and return the generated text
             result = response.get_response()
+            print(f"Here is the result: \n{result}")
             output_data = response.as_numpy("text_output")
             generated_text = output_data[0].decode()
             return generated_text
