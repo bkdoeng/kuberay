@@ -22,7 +22,7 @@ class TritonDeployment:
             log_info=False,
         )
         self._triton_server.start(wait_until_ready=True)
-        self._triton_server.load("llama3-8b-instruct")
+        self._llama3_8b = self._triton_server.load("llama3-8b-instruct")
         if not self._llama3_8b.ready():
                     raise Exception("Model not ready")
 
