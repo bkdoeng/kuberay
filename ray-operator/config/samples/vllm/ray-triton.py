@@ -1,9 +1,12 @@
-import numpy
 import requests
 import tritonserver
 from fastapi import FastAPI
 from PIL import Image
 from ray import serve
+import grpc
+import tritonclient.grpc as grpcclient
+from tritonclient.utils import np_to_triton_dtype
+import numpy as np
 
 
 app = FastAPI()
