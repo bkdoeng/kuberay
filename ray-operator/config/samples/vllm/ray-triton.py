@@ -58,10 +58,8 @@ class TritonDeployment:
 
         print("Inferencing")
         response = self._llama3_8b.infer(
-            model_name=model_name,
             inputs=inputs,
             outputs=outputs,
-            parameters=parameters
         )
         print("Inference done")
         
