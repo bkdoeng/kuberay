@@ -24,7 +24,11 @@ class TritonDeployment:
         self._triton_server = tritonserver.Server(
             model_repository=model_repository,
             model_control_mode=tritonserver.ModelControlMode.EXPLICIT,
-            log_info=False,
+            log_info=True,
+            log_error=True,
+            log_warn=True,
+            http_port=8081,
+            grpc_port=8082, 
         )
         self._triton_server.start(wait_until_ready=True)
         self._llama3_8b = self._triton_server.load("llama3-8b-instruct")
@@ -96,7 +100,7 @@ class TritonDeployment:
     @app.post("/httptest")
     def httptest(self):
         # Triton server details
-        triton_url = "localhost:8001"
+        triton_url = "localhost:8082"
         model_name = "llama3-8b-instruct"
         input_name = "text_input"
         output_name = "text_output"
