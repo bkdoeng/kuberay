@@ -32,39 +32,13 @@ class TritonDeployment:
         self._llama3_8b = self._triton_server.load("llama3-8b-instruct")
         if not self._llama3_8b.ready():
                     raise Exception("Model not ready")
-
-    @app.get("/test")
-    def readyTest(self):
-        print(f"Server Live: {self._triton_server.live()}")
-        print(f"Server Ready: {self._triton_server.ready()}")
-        print(f"Server Ready: {self._triton_server.metadata()}")
-        return "info"
-        
             
     @app.get("/infer")        
     def infer(server_url="http://localhost:8001", model_name="llama3-8b-instruct", prompt="what is tritonserver", max_tokens=1000, temperature=0.7):
-        try:
-            client = grpcclient.InferenceServerClient(url=server_url)
-        except Exception as e:
-            print(f"Failed to connect to Triton server: {e}")
-            return None
-
-        health_ctx = client.is_server_live()
-        print(f"Server live: {health_ctx}")
+        print(f"Server Live: {self._triton_server.live()}")
+        print(f"Server Ready: {self._triton_server.ready()}")
+        print(f"Server Metadata: {self._triton_server.metadata()}")
         
-        ready_ctx = client.is_server_ready()
-        print(f"Server ready: {ready_ctx}")
-        
-        model_ready_ctx = client.is_model_ready(model_name="llama3-8b-instruct", model_version="4294967296")
-        print(f"Model ready: {model_ready_ctx}")
-        
-        server_metadata = client.get_server_metadata()
-        print(f"Server metadata: {server_metadata}")
-        
-        model_metadata = client.get_model_metadata(model_name="llama3-8b-instruct", model_version="4294967296")
-        print(f"Model metadata: {model_metadata}")
-
-        #print("Tritonserver connection is successful")
         # Define input and output tensors
         input_data = np.array([prompt], dtype=np.object_)
         input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
