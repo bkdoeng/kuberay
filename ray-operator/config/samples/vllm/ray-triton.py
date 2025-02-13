@@ -63,11 +63,11 @@ class TritonDeployment:
         print("Inference done")
         
         # Extract and return the generated text
-        result = response[0]
-        print(f"Here is the result: \n{result}")
-        output_data = response.as_numpy("text_output")
-        generated_text = output_data[0].decode()
-        return generated_text
+        #result = response[0]
+        print(f"Here is the result: \n{response}")
+        #output_data = response.as_numpy("text_output")
+        #generated_text = output_data[0].decode()
+        return response
 
     @app.post("/httptest")
     def httptest(self):
