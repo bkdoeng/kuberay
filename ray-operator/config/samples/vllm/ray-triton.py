@@ -9,7 +9,6 @@ from tritonclient.utils import np_to_triton_dtype
 import numpy as np
 import tritonclient.http as httpclient
 import json
-import triton_python_backend_utils as pb_utils
 
 
 app = FastAPI()
@@ -66,9 +65,10 @@ class TritonDeployment:
         # Extract and return the generated text
         #result = response[0]
         print(f"Here is the result: \n{response}")
-        #output_data = response.as_numpy("text_output")
+        output_data = response.as_numpy("text_output")
+        print(f"Here is the output: \n{output_data}")
         #generated_text = output_data[0].decode()
-        return response
+        return "success"
 
     @app.post("/httptest")
     def httptest(self):
