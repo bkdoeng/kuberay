@@ -55,27 +55,22 @@ class TritonDeployment:
         # Create request
         inputs = [input_tensor]
         outputs = [grpcclient.InferRequestedOutput("text_output")]
-    
-        try:
-            print("Inferencing")
-            response = self._llama3_8b.infer(
-                model_name=model_name,
-                inputs=inputs,
-                outputs=outputs,
-                parameters=parameters
-            )
-            print("Inference done")
-            
-            # Extract and return the generated text
-            result = response.get_response()
-            print(f"Here is the result: \n{result}")
-            output_data = response.as_numpy("text_output")
-            generated_text = output_data[0].decode()
-            return generated_text
-    
-        except grpcclient.RequestError as e:
-            print(f"Inference failed: {e}")
-            return None
+
+        print("Inferencing")
+        response = self._llama3_8b.infer(
+            model_name=model_name,
+            inputs=inputs,
+            outputs=outputs,
+            parameters=parameters
+        )
+        print("Inference done")
+        
+        # Extract and return the generated text
+        result = response.get_response()
+        print(f"Here is the result: \n{result}")
+        output_data = response.as_numpy("text_output")
+        generated_text = output_data[0].decode()
+        return generated_text
 
     @app.post("/httptest")
     def httptest(self):
