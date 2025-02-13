@@ -63,7 +63,7 @@ class TritonDeployment:
         print("Inference done")
         
         # Extract and return the generated text
-        result = response.get_response()
+        result = response[0]
         print(f"Here is the result: \n{result}")
         output_data = response.as_numpy("text_output")
         generated_text = output_data[0].decode()
