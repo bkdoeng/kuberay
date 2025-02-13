@@ -63,10 +63,10 @@ class VLLMDeployment:
             model_config = await self.engine.get_model_config()
             # Determine the name of the served model for the OpenAI client.
             model = BaseModelPath(self.engine_args.model, self.engine_args.model)
-            if self.engine_args.served_model_name is not None:
-                served_model_names = self.engine_args.served_model_name
-            else:
-                served_model_names = [model]
+            #if self.engine_args.served_model_name is not None:
+            #    served_model_names = self.engine_args.served_model_name
+            #else:
+            served_model_names = [model]
             
             self.openai_serving_chat = OpenAIServingChat(
                 self.engine,
