@@ -34,7 +34,7 @@ class TritonDeployment:
                     raise Exception("Model not ready")
             
     @app.get("/infer")        
-    def infer(server_url="http://localhost:8001", model_name="llama3-8b-instruct", prompt="what is tritonserver", max_tokens=1000, temperature=0.7):
+    def infer(self, server_url="http://localhost:8001", model_name="llama3-8b-instruct", prompt="what is tritonserver", max_tokens=1000, temperature=0.7):
         print(f"Server Live: {self._triton_server.live()}")
         print(f"Server Ready: {self._triton_server.ready()}")
         print(f"Server Metadata: {self._triton_server.metadata()}")
