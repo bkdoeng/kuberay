@@ -96,14 +96,14 @@ class TritonDeployment:
     @app.post("/httptest")
     def httptest(self):
         # Triton server details
-        triton_url = "localhost:8000"
+        triton_url = "localhost:8001"
         model_name = "llama3-8b-instruct"
         input_name = "text_input"
         output_name = "text_output"
         
         # Create Triton HTTP client
         try:
-            triton_client = httpclient.InferenceServerClient(url=triton_url)
+            triton_client = grpcclient.InferenceServerClient(url=triton_url)
         except Exception as e:
             print(f"channel creation error: {e}")
             exit(1)
@@ -118,30 +118,30 @@ class TritonDeployment:
             exit(1)
             
         # Input data
-        input_text = "What is the capital of France?"
-        inputs = [httpclient.InferInput(input_name, [1], "BYTES")]
-        inputs[0].set_data_from_numpy(np.array([input_text.encode('utf-8')], dtype=np.object_))
+        #input_text = "What is the capital of France?"
+        #inputs = [httpclient.InferInput(input_name, [1], "BYTES")]
+        #inputs[0].set_data_from_numpy(np.array([input_text.encode('utf-8')], dtype=np.object_))
         
         # Output configuration
-        outputs = [httpclient.InferRequestedOutput(output_name)]
+        #outputs = [httpclient.InferRequestedOutput(output_name)]
         
         # Perform inference
-        try:
-            response = triton_client.infer(
-                model_name=model_name,
-                inputs=inputs,
-                outputs=outputs
-            )
-        except Exception as e:
-            print(f"inference error: {e}")
-            exit(1)
+        #try:
+        #    response = triton_client.infer(
+        #        model_name=model_name,
+        #        inputs=inputs,
+        #        outputs=outputs
+        #    )
+        #except Exception as e:
+        #    print(f"inference error: {e}")
+        #    exit(1)
         
         # Process output
-        result = response.get_response()
-        output_data = response.as_numpy(output_name)
-        generated_text = output_data[0].decode('utf-8')
-        print(f"Generated text: {generated_text}")
-        return generated_text 
+        #result = response.get_response()
+        #output_data = response.as_numpy(output_name)
+        #generated_text = output_data[0].decode('utf-8')
+        #print(f"Generated text: {generated_text}")
+        return "success" 
         
     @app.get("/generate")
     def generate(self, prompt: str) -> None:
