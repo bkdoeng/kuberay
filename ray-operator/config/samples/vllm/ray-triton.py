@@ -58,7 +58,7 @@ class TritonDeployment:
 
         print("Inferencing")
         response = self._llama3_8b.infer(
-            inputs=inputs,
+            inputs={"text_input":["what is tritonserver?"]},
         )
         print("Inference done")
         
