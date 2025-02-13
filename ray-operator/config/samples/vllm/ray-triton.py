@@ -7,6 +7,8 @@ import grpc
 import tritonclient.grpc as grpcclient
 from tritonclient.utils import np_to_triton_dtype
 import numpy as np
+import tritonclient.http as httpclient
+import json
 
 
 app = FastAPI()
@@ -75,6 +77,56 @@ class TritonDeployment:
         except grpcclient.RequestError as e:
             print(f"Inference failed: {e}")
             return None
+
+    @app.post("/httptest")
+    def httptest(self):
+        # Triton server details
+        triton_url = "localhost:8000"
+        model_name = "llama3-8b-instruct"
+        input_name = "text_input"
+        output_name = "text_output"
+        
+        # Create Triton HTTP client
+        try:
+            triton_client = httpclient.InferenceServerClient(url=triton_url)
+        except Exception as e:
+            print(f"channel creation error: {e}")
+            exit(1)
+        
+        # Check server and model status
+        if not triton_client.is_server_live():
+            print("server is not live")
+            exit(1)
+        
+        if not triton_client.is_model_ready(model_name):
+            print(f"{model_name} is not ready")
+            exit(1)
+            
+        # Input data
+        input_text = "What is the capital of France?"
+        inputs = [httpclient.InferInput(input_name, [1], "BYTES")]
+        inputs[0].set_data_from_numpy(np.array([input_text.encode('utf-8')], dtype=np.object_))
+        
+        # Output configuration
+        outputs = [httpclient.InferRequestedOutput(output_name)]
+        
+        # Perform inference
+        try:
+            response = triton_client.infer(
+                model_name=model_name,
+                inputs=inputs,
+                outputs=outputs
+            )
+        except Exception as e:
+            print(f"inference error: {e}")
+            exit(1)
+        
+        # Process output
+        result = response.get_response()
+        output_data = response.as_numpy(output_name)
+        generated_text = output_data[0].decode('utf-8')
+        print(f"Generated text: {generated_text}")
+        return generated_text 
         
     @app.get("/generate")
     def generate(self, prompt: str) -> None:
