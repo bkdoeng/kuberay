@@ -4,9 +4,7 @@ from tritonclient.grpc import service_pb2, service_pb2_grpc, model_config_pb2
 import tritonclient.grpc as grpcclient
 import asyncio
 
-@serve.deployment(
-    name="TritonServer"
-)
+@serve.deployment
 class TritonServer:
     def __init__(self, model_repository_path: str, model_name: str):
         self.model_repository_path = model_repository_path
