@@ -59,14 +59,20 @@ class TritonDeployment:
         outputs = [grpcclient.InferRequestedOutput("text_output")]
 
         print("Inferencing")
-        response = self._llama3_8b.infer(
-            inputs={"text_input":["what is tritonserver?"]},
-        )
+        responses = []
+        
+        for response in self._llama3_8b.infer(inputs={"text_input":["what is tritonserver?"]},):
+            responses.append(response)
         print("Inference done")
         
         # Extract and return the generated text
         #result = response[0]
-        print(f"Here is the result: \n{response}")
+        for response in responses:
+          if isinstance(response, grpcclient.InferResult):
+            output_data = response.as_numpy("text_output")
+            print(f"Received output: {output_data}")
+          else:
+            print(f"Error during inference: {response}")
         #output_data = response.as_numpy("text_output")
         #print(f"Here is the output: \n{output_data}")
         #generated_text = output_data[0].decode()
