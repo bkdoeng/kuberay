@@ -4,6 +4,7 @@ from tritonclient.grpc import service_pb2, service_pb2_grpc, model_config_pb2
 import tritonclient.grpc as grpcclient
 import asyncio
 from fastapi import FastAPI
+import grpc
 app = FastAPI()
 
 @serve.deployment()
@@ -18,7 +19,7 @@ class TritonServer:
 
     async def __aenter__(self):
         self.triton_server = await self._start_triton_server()
-        self.channel = grpcclient.insecure_channel("localhost:8081")
+        self.channel = grpc.insecure_channel("localhost:8081")
         self.stub = service_pb2_grpc.GRPCInferenceServiceStub(self.channel)
         await self._load_model()
         return self
