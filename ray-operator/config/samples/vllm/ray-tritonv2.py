@@ -102,7 +102,8 @@ class InferService:
         self.triton_server.start()
         self.model_path = model_path
     
-    async def __call__(self):
+    @app.get("/test")
+    async def test(self):
         prompt = "what is triton"
         sampling_params = '{"temperature":{"double_param":0.7},"top_p":{"double_param":0.9},"max_tokens":{"int64_param":256}}'
 
