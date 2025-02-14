@@ -55,6 +55,22 @@ class TritonServer:
         await self.stub.ModelUnload(request)
 
     @app.post("/infer")
+    async def test(self):
+        input_data = {
+            "inputs": {
+                "text_input": {
+                    "name": "text_input",
+                    "shape": [1],
+                    "datatype": "BYTES",
+                    "data": ["What is triton"],
+                }
+            },
+            "outputs": ["text_output"],
+        }
+        async with self:
+          result = await self.infer(input_data.json())
+        return result
+        
     async def infer(self, request: dict) -> dict:
         inputs = []
         outputs = []
