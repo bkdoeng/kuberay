@@ -32,7 +32,7 @@ class TritonServer:
 
     async def _start_triton_server(self):
       process = await asyncio.create_subprocess_exec(
-          "tritonserver",
+          "/opt/tritonserver/bin/tritonserver",
           "--model-repository",
           self.model_repository_path,
           "--grpc-port",
