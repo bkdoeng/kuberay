@@ -16,7 +16,7 @@ class TritonServer:
         self.triton_server = await self._start_triton_server()
         self.channel = grpc.insecure_channel("localhost:8081")
         self.stub = service_pb2_grpc.GRPCInferenceServiceStub(self.channel)
-        self._load_model()
+        await self._load_model()
 
     async def __aenter__(self):
         self.triton_server = await self._start_triton_server()
@@ -31,7 +31,7 @@ class TritonServer:
         if self.channel:
             await self.channel.close()
 
-    def _start_triton_server(self):
+    async def _start_triton_server(self):
       process = await asyncio.create_subprocess_exec(
           "/opt/tritonserver/bin/tritonserver",
           "--model-repository",
@@ -54,7 +54,7 @@ class TritonServer:
             self.triton_server.terminate()
             await self.triton_server.wait()
 
-    def _load_model(self):
+    async def _load_model(self):
         request = service_pb2.RepositoryModelLoadRequest(model_name=self.model_name)
         await self.stub.RepositoryModelLoad(request)
 
