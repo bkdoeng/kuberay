@@ -67,8 +67,8 @@ class TritonDeployment:
         # Extract and return the generated text
         #result = response[0]
         print(f"Here is the result: \n{response}")
-        output_data = response.as_numpy("text_output")
-        print(f"Here is the output: \n{output_data}")
+        #output_data = response.as_numpy("text_output")
+        #print(f"Here is the output: \n{output_data}")
         #generated_text = output_data[0].decode()
         return "success"
 
