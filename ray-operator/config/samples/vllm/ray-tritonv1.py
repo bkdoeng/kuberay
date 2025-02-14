@@ -96,4 +96,4 @@ class VLLMService:
         result = await self.triton_server.__call__(input_data)
         return result["text_output"][0]
     
-app = VLLMService.bind(TritonServer.bind(model_repository_path="/mnt/model", model_name="llama3-8b-instruct"))
+newapp = VLLMService.bind(TritonServer.bind(model_repository_path="/mnt/model", model_name="llama3-8b-instruct"))
