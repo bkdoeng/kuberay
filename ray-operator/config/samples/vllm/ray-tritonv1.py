@@ -49,11 +49,11 @@ class TritonServer:
 
     async def _load_model(self):
         request = service_pb2.RepositoryModelLoadRequest(model_name=self.model_name)
-        await self.stub.ModelLoad(request)
+        await self.stub.RepositoryModelLoad(request)
 
     async def _unload_model(self):
         request = service_pb2.RepositoryModelUnloadRequest(model_name=self.model_name)
-        await self.stub.ModelUnload(request)
+        await self.stub.RepositoryModelUnload(request)
 
     @app.post("/infer")
     async def test(self):
