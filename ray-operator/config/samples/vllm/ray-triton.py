@@ -27,6 +27,8 @@ class TritonDeployment:
             log_info=True,
             log_error=True,
             log_warn=True,
+            backend_directory='/opt/tritonserver/backends',
+            metrics=True, gpu_metrics=True, cpu_metrics=True,
         )
         self._triton_server.start(wait_until_ready=True)
         self._llama3_8b = self._triton_server.load("llama3-8b-instruct")
