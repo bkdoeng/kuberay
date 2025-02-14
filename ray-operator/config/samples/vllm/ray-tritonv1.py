@@ -1,13 +1,11 @@
 import ray
 from ray import serve
-from ray.serve.http_adapters import json_request
 from tritonclient.grpc import service_pb2, service_pb2_grpc, model_config_pb2
 import tritonclient.grpc as grpcclient
 import asyncio
 
 @serve.deployment(
-    name="TritonServer",
-    http_adapter=json_request
+    name="TritonServer"
 )
 class TritonServer:
     def __init__(self, model_repository_path: str, model_name: str):
