@@ -38,6 +38,12 @@ class TritonServer:
           self.model_repository_path,
           "--grpc-port",
           "8081",
+          "--log-info",
+          "true",
+          "--log-error",
+          "true",
+          "--log-warning",
+          "true",
           stdout=asyncio.subprocess.PIPE,
           stderr=asyncio.subprocess.PIPE
       )
