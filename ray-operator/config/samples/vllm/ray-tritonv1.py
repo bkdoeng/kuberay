@@ -3,19 +3,21 @@ from ray import serve
 from tritonclient.grpc import service_pb2, service_pb2_grpc, model_config_pb2
 import tritonclient.grpc as grpcclient
 import asyncio
+app = FastAPI()
 
-@serve.deployment
+@serve.deployment()
+@serve.ingress(app)
 class TritonServer:
-    def __init__(self, model_repository_path: str, model_name: str):
-        self.model_repository_path = model_repository_path
-        self.model_name = model_name
+    def __init__(self):
+        self.model_repository_path = "/mnt/models"
+        self.model_name = "llama3-8b-instruct"
         self.triton_server = None
         self.channel = None
         self.stub = None
 
     async def __aenter__(self):
         self.triton_server = await self._start_triton_server()
-        self.channel = grpcclient.insecure_channel("localhost:8001")
+        self.channel = grpcclient.insecure_channel("localhost:8081")
         self.stub = service_pb2_grpc.GRPCInferenceServiceStub(self.channel)
         await self._load_model()
         return self
@@ -32,7 +34,7 @@ class TritonServer:
           "--model-repository",
           self.model_repository_path,
           "--grpc-port",
-          "8001",
+          "8081",
           stdout=asyncio.subprocess.PIPE,
           stderr=asyncio.subprocess.PIPE
       )
@@ -51,6 +53,7 @@ class TritonServer:
         request = service_pb2.ModelUnloadRequest(model_name=self.model_name)
         await self.stub.ModelUnload(request)
 
+    @app.post("/infer")
     async def infer(self, request: dict) -> dict:
         inputs = []
         outputs = []
@@ -69,31 +72,5 @@ class TritonServer:
         for output in response.outputs:
             result[output.name] = grpcclient.InferResult(response).as_numpy(output.name).tolist()
         return result
-
-    async def __call__(self, http_request):
-      request_data = await http_request.json()
-      async with self:
-        result = await self.infer(request_data)
-      return result
-
-@serve.deployment
-class VLLMService:
-    def __init__(self, triton_server: TritonServer):
-        self.triton_server = triton_server
-
-    async def __call__(self, request: str) -> str:
-        input_data = {
-            "inputs": {
-                "text_input": {
-                    "name": "text_input",
-                    "shape": [1],
-                    "datatype": "BYTES",
-                    "data": [request],
-                }
-            },
-            "outputs": ["text_output"],
-        }
-        result = await self.triton_server.__call__(input_data)
-        return result["text_output"][0]
     
-newapp = VLLMService.bind(TritonServer.bind(model_repository_path="/mnt/model", model_name="llama3-8b-instruct"))
+app = TritonServer.bind()
