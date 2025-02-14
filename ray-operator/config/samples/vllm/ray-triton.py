@@ -68,14 +68,8 @@ class TritonDeployment:
         # Extract and return the generated text
         #result = response[0]
         for response in responses:
-          if isinstance(response, grpcclient.InferResult):
-            output_data = response.as_numpy("text_output")
-            print(f"Received output: {output_data}")
-          else:
-            print(f"Error during inference: {response}")
-        #output_data = response.as_numpy("text_output")
-        #print(f"Here is the output: \n{output_data}")
-        #generated_text = output_data[0].decode()
+          print(response.outputs["text_output"].to_bytes_array())
+
         return "success"
 
     @app.post("/httptest")
