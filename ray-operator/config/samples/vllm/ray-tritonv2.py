@@ -97,10 +97,10 @@ class TritonServer:
 @serve.deployment()
 @serve.ingress(app)
 class InferService:
-    def __init__(self, model_path):
+    def __init__(self):
         self.triton_server = TritonServer()
         self.triton_server.start()
-        self.model_path = model_path
+        self.model_path = "/mnt/models"
     
     @app.get("/test")
     async def test(self):
