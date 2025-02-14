@@ -3,6 +3,7 @@ from ray import serve
 from tritonclient.grpc import service_pb2, service_pb2_grpc, model_config_pb2
 import tritonclient.grpc as grpcclient
 import asyncio
+from fastapi import FastAPI
 app = FastAPI()
 
 @serve.deployment()
