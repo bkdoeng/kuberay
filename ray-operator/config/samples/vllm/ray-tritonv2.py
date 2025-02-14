@@ -6,7 +6,7 @@ import tritonclient.grpc as grpcclient
 import grpc
 import asyncio
 from fastapi import FastAPI
-from vllm import VLLM, EngineArgs, SamplingParams
+from vllm import LLM, EngineArgs, SamplingParams
 import os
 import numpy as np
 import json
