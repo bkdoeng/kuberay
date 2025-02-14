@@ -13,9 +13,10 @@ class TritonServer:
     def __init__(self):
         self.model_repository_path = "/mnt/models"
         self.model_name = "llama3-8b-instruct"
-        self.triton_server = None
-        self.channel = None
-        self.stub = None
+        self.triton_server = await self._start_triton_server()
+        self.channel = grpc.insecure_channel("localhost:8081")
+        self.stub = service_pb2_grpc.GRPCInferenceServiceStub(self.channel)
+        await self._load_model()
 
     async def __aenter__(self):
         self.triton_server = await self._start_triton_server()
