@@ -73,7 +73,7 @@ class TritonDeployment:
         
         print(b"".join(output))
 
-        return "success"
+        return b"".join(output)
 
     @app.post("/httptest")
     def httptest(self):
