@@ -73,7 +73,7 @@ class TritonServer:
                 input_proto.name = "text_input"
                 input_proto.shape.extend(input_data.shape)
                 input_proto.datatype = "BYTES"
-                input_proto.contents.raw_contents.append(input_tensor.serialize())
+                #input_proto.contents.raw_contents.append(input_tensor.serialize())
                 request.inputs.extend([input_proto])
                 
                 #Prepare sampling parameters
@@ -86,7 +86,7 @@ class TritonServer:
                 params_proto.name = "sampling_params"
                 params_proto.shape.extend(params_data.shape)
                 params_proto.datatype = "BYTES"
-                params_proto.contents.raw_contents.append(params_tensor.serialize())
+                #params_proto.contents.raw_contents.append(params_tensor.serialize())
                 request.inputs.extend([params_tensor])
                 
                 # Prepare output tensors
