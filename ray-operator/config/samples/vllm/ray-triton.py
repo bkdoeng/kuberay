@@ -70,10 +70,11 @@ class TritonDeployment:
         output = []
         for response in responses:
           output.append(response.outputs["text_output"].to_bytes_array())
-        
-        print(b"".join(output).decode("utf-8"))
 
-        return b"".join(output).decode("utf-8")
+        generated_text = b"".join(output).decode('utf-8')
+        print(generated_text)
+
+        return generated_text
 
     @app.post("/httptest")
     def httptest(self):
