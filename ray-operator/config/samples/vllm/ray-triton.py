@@ -69,9 +69,10 @@ class TritonDeployment:
         #result = response[0]
         output = []
         for response in responses:
+          print(response.outputs["text_output"].to_bytes_array())
           output.append(response.outputs["text_output"].to_bytes_array())
 
-        print(b"".join(output))
+        print(output)
 
         return "success"
 
