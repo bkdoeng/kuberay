@@ -68,7 +68,7 @@ class TritonServer:
                 input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
                 input_tensor.set_data_from_numpy(input_data)
                 
-                input_proto = service_pb2.ModelInferRequest().InferInput()
+                input_proto = service_pb2.ModelInferRequest().InferInputTensor()
                 input_proto.name = "text_input"
                 input_proto.shape.extend(input_data.shape)
                 input_proto.datatype = "BYTES"
@@ -81,7 +81,7 @@ class TritonServer:
                 params_tensor = grpcclient.InferInput("sampling_params", params_data.shape, "BYTES")
                 params_tensor.set_data_from_numpy(params_data)
 
-                params_proto = service_pb2.ModelInferRequest().InferInput()
+                params_proto = service_pb2.ModelInferRequest().InferInputTensor()
                 params_proto.name = "sampling_params"
                 params_proto.shape.extend(params_data.shape)
                 params_proto.datatype = "BYTES"
