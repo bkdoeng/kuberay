@@ -1,4 +1,4 @@
-import requests
+    import requests
 import tritonserver
 from fastapi import FastAPI
 from PIL import Image
@@ -74,7 +74,7 @@ class TritonDeployment:
         generated_text = b"".join(output)
         print(generated_text)
 
-        return generated_text
+        return "success"
 
     @app.post("/httptest")
     def httptest(self):
