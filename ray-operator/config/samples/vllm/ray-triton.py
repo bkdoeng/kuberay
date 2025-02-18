@@ -93,10 +93,8 @@ class TritonDeployment:
         #result = response[0]
         output = []
         for response in responses:
-          print(response.outputs["text_output"].tobytes())
+          print(response.outputs["text_output"].to_bytes_array().decode('utf-8'))
           output.append(response.outputs["text_output"].to_bytes_array())
-
-        print(output)
 
         return "success"
 
