@@ -74,7 +74,7 @@ class TritonServer:
                 input_proto.shape.extend(input_data.shape)
                 input_proto.datatype = "BYTES"
                 input_proto.contents = input_tensor.serialize()
-                #input_proto.contents.raw_contents.append(input_tensor.serialize())
+                #input_proto.contents.raw_contents.append(input_tensor)
                 request.inputs.extend([input_proto])
                 
                 #Prepare sampling parameters
