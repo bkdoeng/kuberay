@@ -79,15 +79,15 @@ class TritonServer:
                 #Prepare sampling parameters
                 sampling_params_str = json.dumps(sampling_params)
                 params_data = np.array([sampling_params_str]).astype(np.object_)
-                params_tensor = grpcclient.InferInput("sampling_params", params_data.shape, "BYTES")
-                params_tensor.set_data_from_numpy(params_data)
+                #params_tensor = grpcclient.InferInput("sampling_params", params_data.shape, "BYTES")
+                #params_tensor.set_data_from_numpy(params_data)
 
                 params_proto = service_pb2.ModelInferRequest().InferInputTensor()
                 params_proto.name = "sampling_params"
                 params_proto.shape.extend(params_data.shape)
                 params_proto.datatype = "BYTES"
                 #params_proto.contents.raw_contents.append(params_tensor.serialize())
-                request.inputs.extend([params_tensor])
+                request.inputs.extend([params_proto])
                 
                 # Prepare output tensors
                 output_tensor = grpcclient.InferRequestedOutput("text_output")
