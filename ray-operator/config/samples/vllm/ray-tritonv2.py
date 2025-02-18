@@ -85,12 +85,13 @@ class TritonServer:
                 params_proto.name = "sampling_params"
                 params_proto.shape.extend(params_data.shape)
                 params_proto.datatype = "BYTES"
-                #params_proto.contents.raw_contents.append(params_tensor.serialize())
+                
                 request.inputs.extend([params_proto])
                 request.raw_input_contents.extend([params_data.tobytes()])
                 
                 # Prepare output tensors
-                output_tensor = grpcclient.InferRequestedOutput("text_output")
+                output_tensor = service_pb2.ModelInferRequest().InferRequestedOutputTensor()
+                output_tensor.name = "text_output"
                 request.outputs.extend([output_tensor])
 
                 # Send request and get response
