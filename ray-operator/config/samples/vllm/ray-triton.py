@@ -1,4 +1,4 @@
-import requests
+(import requests
 import tritonserver
 from fastapi import FastAPI
 from PIL import Image
@@ -40,6 +40,7 @@ class TritonDeployment:
         print(f"Server Live: {self._triton_server.live()}")
         print(f"Server Ready: {self._triton_server.ready()}")
         print(f"Server Metadata: {self._triton_server.metadata()}")
+        print(f"Model Config: {self._llama3_8b.config()}")
         
         # Define input and output tensors
         input_data = np.array([prompt], dtype=np.object_)
