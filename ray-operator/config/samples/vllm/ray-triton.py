@@ -97,7 +97,7 @@ class TritonDeployment:
           print(out)
           output.append(response.outputs["text_output"].to_bytes_array())
 
-        return "success"
+        return out
 
     @app.post("/httptest")
     def httptest(self):
