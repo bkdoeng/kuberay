@@ -85,7 +85,7 @@ class TritonDeployment:
         print("Inferencing")
         responses = []
         
-        for response in self._llama3_8b.infer(inputs=inputs):
+        for response in self._llama3_8b.infer(inputs='{"text_input": "History of chennai"}'):
             responses.append(response)
         print("Inference done")
         
