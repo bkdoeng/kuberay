@@ -59,7 +59,7 @@ class TritonDeployment:
         
         # Create request
         # ------------- new ---------------------
-        request = _llama3_8b.create_request()
+        request = service_pb2.ModelInferRequest()
         #request.model_name = "llama3-8b-instruct"
         #request.model_version = "4294967296"
 
