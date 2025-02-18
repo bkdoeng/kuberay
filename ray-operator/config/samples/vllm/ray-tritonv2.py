@@ -66,29 +66,28 @@ class TritonServer:
 
                 # Prepare input tensors
                 input_data = np.array([prompt]).astype(np.object_)
-                input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
-                input_tensor.set_data_from_numpy(input_data)
-                
+                #input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
+                #input_tensor.set_data_from_numpy(input_data)
                 input_proto = service_pb2.ModelInferRequest().InferInputTensor()
                 input_proto.name = "text_input"
                 input_proto.shape.extend(input_data.shape)
                 input_proto.datatype = "BYTES"
-                input_proto.contents = input_tensor
-                #input_proto.contents.raw_contents.append(input_tensor)
+                
                 request.inputs.extend([input_proto])
+                request.raw_input_contents.extend([input_data.tobytes()])
                 
                 #Prepare sampling parameters
                 sampling_params_str = json.dumps(sampling_params)
                 params_data = np.array([sampling_params_str]).astype(np.object_)
                 #params_tensor = grpcclient.InferInput("sampling_params", params_data.shape, "BYTES")
                 #params_tensor.set_data_from_numpy(params_data)
-
                 params_proto = service_pb2.ModelInferRequest().InferInputTensor()
                 params_proto.name = "sampling_params"
                 params_proto.shape.extend(params_data.shape)
                 params_proto.datatype = "BYTES"
                 #params_proto.contents.raw_contents.append(params_tensor.serialize())
                 request.inputs.extend([params_proto])
+                request.raw_input_contents.extend([params_data.tobytes()])
                 
                 # Prepare output tensors
                 output_tensor = grpcclient.InferRequestedOutput("text_output")
