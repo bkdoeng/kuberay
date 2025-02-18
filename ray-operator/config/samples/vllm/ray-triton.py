@@ -60,7 +60,7 @@ class TritonDeployment:
         # Create request
         # ------------- new ---------------------
         request = service_pb2.ModelInferRequest()
-        request.model_name = self.model_name
+        request.model_name = "llama3-8b-instruct"
         request.model_version = "4294967296"
 
         # Prepare input tensors
