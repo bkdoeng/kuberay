@@ -66,13 +66,14 @@ class TritonServer:
 
                 # Prepare input tensors
                 input_data = np.array([prompt]).astype(np.object_)
-                #input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
-                #input_tensor.set_data_from_numpy(input_data)
+                input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
+                input_tensor.set_data_from_numpy(input_data)
                 
                 input_proto = service_pb2.ModelInferRequest().InferInputTensor()
                 input_proto.name = "text_input"
                 input_proto.shape.extend(input_data.shape)
                 input_proto.datatype = "BYTES"
+                input_proto.contents = input_tensor.serialize()
                 #input_proto.contents.raw_contents.append(input_tensor.serialize())
                 request.inputs.extend([input_proto])
                 
