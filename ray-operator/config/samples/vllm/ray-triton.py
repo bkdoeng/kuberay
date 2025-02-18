@@ -1,4 +1,4 @@
-(import requests
+import requests
 import tritonserver
 from fastapi import FastAPI
 from PIL import Image
