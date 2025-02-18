@@ -5,6 +5,7 @@ from PIL import Image
 from ray import serve
 import grpc
 import tritonclient.grpc as grpcclient
+from tritonclient.grpc import service_pb2, service_pb2_grpc, model_config_pb2
 from tritonclient.utils import np_to_triton_dtype
 import numpy as np
 import tritonclient.http as httpclient
@@ -54,15 +55,37 @@ class TritonDeployment:
             "bad_words": "",
             "stop_words": ""
         }
-    
+
+        
         # Create request
+        # ------------- new ---------------------
+        request = service_pb2.ModelInferRequest()
+        request.model_name = self.model_name
+        request.model_version = "4294967296"
+
+        # Prepare input tensors
+        input_data = np.array(["what is tritonserver"]).astype(np.object_)
+        input_proto = service_pb2.ModelInferRequest().InferInputTensor()
+        input_proto.name = "text_input"
+        input_proto.shape.extend(input_data.shape)
+        input_proto.datatype = "BYTES"
+        
+        request.inputs.extend([input_proto])
+        request.raw_input_contents.extend([input_data.tobytes()])
+
+        # Prepare output tensors
+        output_tensor = service_pb2.ModelInferRequest().InferRequestedOutputTensor()
+        output_tensor.name = "text_output"
+        request.outputs.extend([output_tensor])
+        # ------------- new ---------------------
+        
         inputs = [input_tensor]
         outputs = [grpcclient.InferRequestedOutput("text_output")]
 
         print("Inferencing")
         responses = []
         
-        for response in self._llama3_8b.infer(inputs={"text_input":["what is tritonserver?"],"stream": True},):
+        for response in self._llama3_8b.infer(request):
             responses.append(response)
         print("Inference done")
         
