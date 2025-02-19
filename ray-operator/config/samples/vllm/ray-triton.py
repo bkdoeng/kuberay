@@ -10,6 +10,8 @@ from tritonclient.utils import np_to_triton_dtype
 import numpy as np
 import tritonclient.http as httpclient
 import json
+from starlette.requests import Request
+from starlette.responses import StreamingResponse, JSONResponse
 
 
 app = FastAPI()
@@ -55,29 +57,6 @@ class TritonDeployment:
             "bad_words": "",
             "stop_words": ""
         }
-
-        
-        # Create request
-        # ------------- new ---------------------
-        request = service_pb2.ModelInferRequest()
-        #request.model_name = "llama3-8b-instruct"
-        #request.model_version = "4294967296"
-
-        # Prepare input tensors
-        input_data = np.array(["what is tritonserver"]).astype(np.object_)
-        input_proto = service_pb2.ModelInferRequest().InferInputTensor()
-        input_proto.name = "text_input"
-        input_proto.shape.extend(input_data.shape)
-        input_proto.datatype = "BYTES"
-        
-        request.inputs.extend([input_proto])
-        request.raw_input_contents.extend([input_data.tobytes()])
-
-        # Prepare output tensors
-        output_tensor = service_pb2.ModelInferRequest().InferRequestedOutputTensor()
-        output_tensor.name = "text_output"
-        request.outputs.extend([output_tensor])
-        # ------------- new ---------------------
         
         inputs = [input_tensor]
         outputs = [grpcclient.InferRequestedOutput("text_output")]
@@ -91,13 +70,13 @@ class TritonDeployment:
         
         # Extract and return the generated text
         #result = response[0]
-        output = []
+        #output = []
         for response in responses:
           out = np.array2string(response.outputs["text_output"].to_bytes_array())
           print(out)
-          output.append(response.outputs["text_output"].to_bytes_array())
+          #output.append(response.outputs["text_output"].to_bytes_array())
 
-        return out
+        return JSONResponse(content=out)
 
     @app.post("/httptest")
     def httptest(self):
