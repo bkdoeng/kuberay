@@ -79,7 +79,7 @@ class TritonDeployment:
         return JSONResponse(content="test")
 
     @app.post("/testinfer")        
-    def infer(self, request: Request):
+    async def infer(self, request: Request):
         print(f"Server Live: {self._triton_server.live()}")
         print(f"Server Ready: {self._triton_server.ready()}")
         print(f"Server Metadata: {self._triton_server.metadata()}")
