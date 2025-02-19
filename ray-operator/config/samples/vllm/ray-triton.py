@@ -85,6 +85,9 @@ class TritonDeployment:
         print(f"Server Metadata: {self._triton_server.metadata()}")
         print(f"Model Config: {self._llama3_8b.config()}")
         print(f"Request: {request.json()}")
+
+        data = await request.json()
+        prompt = data.get("text_input")
         
         # Define input and output tensors
         input_data = np.array([prompt], dtype=np.object_)
@@ -105,7 +108,7 @@ class TritonDeployment:
         print("Inferencing")
         responses = []
         
-        for response in self._llama3_8b.infer(inputs={"text_input":["what is tritonserver?"]},):
+        for response in self._llama3_8b.infer(inputs={"text_input":[prompt]},):
             responses.append(response)
         print("Inference done")
         
