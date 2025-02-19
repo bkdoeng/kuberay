@@ -78,6 +78,47 @@ class TritonDeployment:
 
         return JSONResponse(content="test")
 
+    @app.post("/testinfer")        
+    def infer(self, request: Request):
+        print(f"Server Live: {self._triton_server.live()}")
+        print(f"Server Ready: {self._triton_server.ready()}")
+        print(f"Server Metadata: {self._triton_server.metadata()}")
+        print(f"Model Config: {self._llama3_8b.config()}")
+        print(f"Request: {request.json()}")
+        
+        # Define input and output tensors
+        input_data = np.array([prompt], dtype=np.object_)
+        input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
+        input_tensor.set_data_from_numpy(input_data)
+    
+        # Set inference parameters
+        parameters = {
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "bad_words": "",
+            "stop_words": ""
+        }
+        
+        inputs = [input_tensor]
+        outputs = [grpcclient.InferRequestedOutput("text_output")]
+
+        print("Inferencing")
+        responses = []
+        
+        for response in self._llama3_8b.infer(inputs={"text_input":["what is tritonserver?"]},):
+            responses.append(response)
+        print("Inference done")
+        
+        # Extract and return the generated text
+        #result = response[0]
+        #output = []
+        for response in responses:
+          out = np.array2string(response.outputs["text_output"].to_bytes_array())
+          print(out)
+          #output.append(response.outputs["text_output"].to_bytes_array())
+
+        return JSONResponse(content=out)
+
     @app.post("/httptest")
     def httptest(self):
         # Triton server details
