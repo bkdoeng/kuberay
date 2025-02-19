@@ -84,26 +84,27 @@ class TritonDeployment:
         print(f"Server Ready: {self._triton_server.ready()}")
         print(f"Server Metadata: {self._triton_server.metadata()}")
         print(f"Model Config: {self._llama3_8b.config()}")
-        print(f"Request: {request.json()}")
+        #print(f"Request: {request.json()}")
 
         data = await request.json()
         prompt = data.get("text_input")
-        
+
+        print(f"Prompt: {prompt}")
         # Define input and output tensors
-        input_data = np.array([prompt], dtype=np.object_)
-        input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
-        input_tensor.set_data_from_numpy(input_data)
+        #input_data = np.array([prompt], dtype=np.object_)
+        #input_tensor = grpcclient.InferInput("text_input", input_data.shape, "BYTES")
+        #input_tensor.set_data_from_numpy(input_data)
     
         # Set inference parameters
-        parameters = {
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-            "bad_words": "",
-            "stop_words": ""
-        }
+        #parameters = {
+        #    "max_tokens": max_tokens,
+        #    "temperature": temperature,
+        #    "bad_words": "",
+        #    "stop_words": ""
+        #}
         
-        inputs = [input_tensor]
-        outputs = [grpcclient.InferRequestedOutput("text_output")]
+        #inputs = [input_tensor]
+        #outputs = [grpcclient.InferRequestedOutput("text_output")]
 
         print("Inferencing")
         responses = []
