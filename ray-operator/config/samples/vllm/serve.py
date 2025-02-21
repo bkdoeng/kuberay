@@ -135,4 +135,12 @@ def build_app(cli_args: Dict[str, str]) -> serve.Application:
 
 
 model = build_app(
-    {"model": os.environ['MODEL_ID'], "tensor-parallel-size": os.environ['TENSOR_PARALLELISM'], "pipeline-parallel-size": os.environ['PIPELINE_PARALLELISM']})
+    {"model": os.environ['MODEL_ID'], 
+     "tensor-parallel-size": os.environ['TENSOR_PARALLELISM'], 
+     "pipeline-parallel-size": os.environ['PIPELINE_PARALLELISM'],
+     "disable-log-requests": True,
+     "distributed-executor-backend": "mp",
+     "gpu-memory-utilization": 0.65,
+     "enable-chunked-prefill": False,
+     "enforce-eager": True,
+    })
