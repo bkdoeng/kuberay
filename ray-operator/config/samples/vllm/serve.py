@@ -139,8 +139,6 @@ model = build_app(
      "tensor-parallel-size": os.environ['TENSOR_PARALLELISM'], 
      "pipeline-parallel-size": os.environ['PIPELINE_PARALLELISM'],
      "disable-log-requests": True,
-     "distributed-executor-backend": "mp",
-     "gpu-memory-utilization": 0.65,
      "enable-chunked-prefill": False,
      "enforce-eager": True,
     })
