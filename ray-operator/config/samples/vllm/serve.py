@@ -39,6 +39,7 @@ class VLLMDeployment:
         prompt_adapters: Optional[List[PromptAdapterPath]] = None,
         request_logger: Optional[RequestLogger] = None,
         chat_template: Optional[str] = None,
+        chat_template_content_format: Optional[str] = "openai"
     ):
         logger.info(f"Starting with engine args: {engine_args}")
         self.openai_serving_chat = None
@@ -48,6 +49,7 @@ class VLLMDeployment:
         self.prompt_adapters = prompt_adapters
         self.request_logger = request_logger
         self.chat_template = chat_template
+        self.chat_template_content_format = chat_template_content_format
         self.engine = AsyncLLMEngine.from_engine_args(engine_args)
 
     @app.post("/v1/chat/completions")
@@ -77,6 +79,7 @@ class VLLMDeployment:
                 prompt_adapters=self.prompt_adapters,
                 request_logger=self.request_logger,
                 chat_template=self.chat_template,
+                chat_template_content_format= self.chat_template_content_format,
             )
         logger.info(f"Request: {request}")
         generator = await self.openai_serving_chat.create_chat_completion(
