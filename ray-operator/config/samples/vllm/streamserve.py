@@ -54,6 +54,45 @@ class VLLMDeployment:
 
     @app.post("/v1/chat/completions")
     async def create_chat_completion(
+        self, request: ChatCompletionRequest, raw_request: Request
+    ):
+        """OpenAI-compatible HTTP endpoint.
+
+        API reference:
+            - https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html
+        """
+        if not self.openai_serving_chat:
+            model_config = await self.engine.get_model_config()
+            # Determine the name of the served model for the OpenAI client.
+            model = BaseModelPath(self.engine_args.model, self.engine_args.model)
+            #if self.engine_args.served_model_name is not None:
+            #    served_model_names = self.engine_args.served_model_name
+            #else:
+            served_model_names = [model]
+            
+            self.openai_serving_chat = OpenAIServingChat(
+                self.engine,
+                model_config,
+                served_model_names,
+                self.response_role,
+                lora_modules=self.lora_modules,
+                prompt_adapters=self.prompt_adapters,
+                request_logger=self.request_logger,
+                chat_template=self.chat_template,
+                chat_template_content_format= self.chat_template_content_format,
+            )
+        logger.info(f"Request: {request}")
+        generator = await self.openai_serving_chat.create_chat_completion(
+            request, raw_request
+        )
+        if isinstance(generator, ErrorResponse):
+            return JSONResponse(
+                content=generator.model_dump(), status_code=generator.code
+            )
+        if request.stream:
+            return StreamingResponse(content=generator, media_type="text/event-stream")
+        else:
+            assert isinstance(generator, ChatCompletionResponse)
             return JSONResponse(content=generator.model_dump())
 
 
