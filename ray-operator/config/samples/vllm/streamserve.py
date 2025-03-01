@@ -64,7 +64,7 @@ class VLLMDeployment:
         if not self.openai_serving_chat:
             model_config = await self.engine.get_model_config()
             # Determine the name of the served model for the OpenAI client.
-            model = BaseModelPath(self.engine_args.model, self.engine_args.model)
+            model = BaseModelPath(self.engine_args.model, self.engine_args.served_model_name)
             #if self.engine_args.served_model_name is not None:
             #    served_model_names = self.engine_args.served_model_name
             #else:
@@ -138,4 +138,4 @@ def build_app(cli_args: Dict[str, str]) -> serve.Application:
 
 
 model = build_app(
-    {"model": os.environ['MODEL_ID'], "tensor-parallel-size": os.environ['TENSOR_PARALLELISM'], "pipeline-parallel-size": os.environ['PIPELINE_PARALLELISM'], "enable-chunked-prefill": "False", "swap-space": "64"})
+    {"model": "/root/.cache/huggingface/hub/models--meta-llama--Meta-Llama-3-8B-Instruct/snapshots/5f0b02c75b57c5855da9ae460ce51323ea669d8a", "served-model-name": "llama3-8b-instruct", "tensor-parallel-size": os.environ['TENSOR_PARALLELISM'], "pipeline-parallel-size": os.environ['PIPELINE_PARALLELISM'], "enable-chunked-prefill": "False", "swap-space": "64"})
